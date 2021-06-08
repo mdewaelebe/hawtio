@@ -1,6 +1,60 @@
 ## Change Log
 
-#### 2.11.0 (To be released)
+#### 2.14.0 (To be released)
+
+#### 2.13.4
+
+* Upgrade to Jackson 2.12.3
+
+#### 2.13.3
+
+* Upgrade to commons-io 2.8.0
+
+#### 2.13.2
+
+* Bug fixes
+
+#### 2.13.1
+
+* Bug fixes
+
+#### 2.13.0
+
+* Improve JFR Diagnostics plugin [hawtio-integration#109](https://github.com/hawtio/hawtio-integration/pull/109)
+
+#### 2.12.0
+
+* Add Quartz plugin [#2642](https://github.com/hawtio/hawtio/issues/2642)
+* Support client certificate authentication for Apache Artemis [#2469](https://github.com/hawtio/hawtio/issues/2469)
+* Bug fix
+
+#### 2.11.1
+
+* Upgrade to Jetty 9.4.32.v20200930
+
+#### 2.11.0
+
+* Performance improvement for distributions other than Karaf by removing `RBACRestrictor` from their `web.xml`.
+* Bundle installed with the `hawtio` Karaf feature is renamed from `hawtio-war` to `hawtio-osgi`.
+* Add "remember me" checkbox to Login page
+* Add user name to logout menu item
+* Upgrade Hawtio components
+* Upgrade to Spring Boot 2.3.4.RELEASE / Spring Framework 5.2.9
+* Upgrade to Keycloak adapter 11.0.2
+* Bug fixes
+
+#### 2.10.2
+
+* Upgrade Hawtio components
+* Upgrade to AngularJS 1.8.0
+* Upgrade to Keycloak adapter 10.0.2
+* Bug fixes
+
+#### 2.10.1
+
+* Upgrade to Spring Boot 2.3.0 / Spring Framework 5.2.6
+* Add [springboot-authentication-jar](examples/springboot-authentication-jar) example to demonstrate how to customise `hawtconfig.json` with Spring Boot jar app.
+* Change property `hawtio.proxyWhitelist` to `hawtio.proxyAllowlist`
 
 #### 2.10.0
 

@@ -178,6 +178,16 @@
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping>
 
+  <filter>
+    <filter-name>FlightRecorderDownloadFacade</filter-name>
+    <filter-class>io.hawt.web.filters.FlightRecordingDownloadFacade</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FlightRecorderDownloadFacade</filter-name>
+    <url-pattern>/jolokia/*</url-pattern>
+    <url-pattern>/proxy/*</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>jolokia-agent</servlet-name>
     <servlet-class>io.hawt.web.servlets.JolokiaConfiguredAgentServlet</servlet-class>
@@ -193,10 +203,6 @@
     <init-param>
       <param-name>includeStackTrace</param-name>
       <param-value>false</param-value>
-    </init-param>
-    <init-param>
-      <param-name>restrictorClass</param-name>
-      <param-value>io.hawt.system.RBACRestrictor</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -214,7 +220,7 @@
       '*' allows all hosts but keep in mind it's vulnerable to security attacks.
     -->
     <init-param>
-      <param-name>proxyWhitelist</param-name>
+      <param-name>proxyAllowlist</param-name>
       <param-value>
         localhost,
         127.0.0.1
@@ -280,19 +286,6 @@
   <listener>
     <listener-class>io.hawt.HawtioContextListener</listener-class>
   </listener>
-
-  <listener>
-    <listener-class>io.hawt.blueprint.HawtioBlueprintContextListener</listener-class>
-  </listener>
-
-  <context-param>
-    <param-name>blueprintProperties</param-name>
-    <param-value>blueprint.properties</param-value>
-  </context-param>
-  <context-param>
-    <param-name>blueprintLocation</param-name>
-    <param-value>OSGI-INF/blueprint/blueprint.xml</param-value>
-  </context-param>
 
   <error-page>
     <error-code>404</error-code>

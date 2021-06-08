@@ -6,16 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 
-import io.hawt.system.AuthInfo;
 import io.hawt.system.Authenticator;
 import io.hawt.util.Strings;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,16 +32,15 @@ public class ProxyDetails implements ProxyAddress {
     public static final String USER_PARAM = "_user";
     public static final String PWD_PARAM = "_pwd";
 
-    private static Set<String> ignoreHeaderNames = new HashSet<String>(Arrays.asList(USER_PARAM, PWD_PARAM, "_url", "url"));
+    private static final Set<String> ignoreHeaderNames = new HashSet<>(Arrays.asList(USER_PARAM, PWD_PARAM, "_url", "url"));
 
     public ProxyDetails(HttpServletRequest httpServletRequest) {
         this(httpServletRequest.getPathInfo());
 
-        AuthInfo info = Authenticator.getAuthorizationHeader(httpServletRequest);
-        if (info.isSet()) {
-            userName = info.username;
-            password = info.password;
-        }
+        Authenticator.extractAuthHeader(httpServletRequest, (user, pass) -> {
+            userName = user;
+            password = pass;
+        });
 
         // lets add the query parameters
         Enumeration<?> iter = httpServletRequest.getParameterNames();
@@ -70,10 +64,6 @@ public class ProxyDetails implements ProxyAddress {
 
     public ProxyDetails(String pathInfo) {
         hostAndPort = pathInfo.replace(" ", "%20");
-
-        if (hostAndPort == null) {
-            return;
-        }
 
         while (hostAndPort.startsWith("/")) {
             hostAndPort = hostAndPort.substring(1);
@@ -147,19 +137,19 @@ public class ProxyDetails implements ProxyAddress {
         }
     }
 
-    public boolean isAllowed(Set<String> whitelist) {
-        if (whitelist.contains("*")) {
+    public boolean isAllowed(Set<String> allowlist) {
+        if (allowlist.contains("*")) {
             return true;
         }
         // host may contain port number! (e.g. "localhost:9000")
-        return whitelist.contains(host.split(":")[0]);
+        return allowlist.contains(host.split(":")[0]);
     }
 
-    public boolean isAllowed(List<Pattern> regexWhitelist) {
+    public boolean isAllowed(List<Pattern> regexAllowlist) {
         // host may contain port number! (e.g. "localhost:9000")
         String hostWithoutPort = host.split(":")[0];
 
-        for (Pattern pattern : regexWhitelist) {
+        for (Pattern pattern : regexAllowlist) {
             if (pattern.matcher(hostWithoutPort).matches()) {
                 return true;
             }
@@ -175,9 +165,7 @@ public class ProxyDetails implements ProxyAddress {
 
     @Override
     public String toString() {
-        return "ProxyDetails{" +
-                userName + "@" + hostAndPort + "/" + stringProxyURL
-                + "}";
+        return String.format("ProxyDetails{%s@%s/%s}", userName, hostAndPort, stringProxyURL);
     }
 
     /**
@@ -194,19 +182,6 @@ public class ProxyDetails implements ProxyAddress {
             }
         }
         return answer;
-    }
-
-    public HttpClient createHttpClient(HttpMethod httpMethodProxyRequest) {
-        HttpClient client = new HttpClient();
-
-        if (userName != null) {
-            //client.getParams().setAuthenticationPreemptive(true);
-            httpMethodProxyRequest.setDoAuthentication(true);
-
-            Credentials defaultcreds = new UsernamePasswordCredentials(userName, password);
-            client.getState().setCredentials(new AuthScope(host, port, AuthScope.ANY_REALM), defaultcreds);
-        }
-        return client;
     }
 
     public String getStringProxyURL() {
