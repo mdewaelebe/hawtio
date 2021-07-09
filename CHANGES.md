@@ -1,6 +1,9 @@
 ## Change Log
 
-#### 2.14.0 (To be released)
+#### 2.13.5-1
+
+* Fix hawtio-embedded [Main.java](hawtio-embedded/src/main/java/io/hawt/embedded/Main.java")
+  - Support custom plugins by deploying Hawtio.war application in a subdirectory
 
 #### 2.13.5
 
