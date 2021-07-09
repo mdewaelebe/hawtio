@@ -123,7 +123,7 @@
     <module>hawtio-util</module>
     <module>hawtio-war</module>
     <module>platforms/hawtio-osgi-jmx</module>
-    <module>platforms/karaf</module>
+    <!--module>platforms/karaf</module--> <!-- TODO : investigate why this is causing issues during build -->
     <module>platforms/osgi-war</module>
     <module>platforms/springboot</module>
     <module>platforms/springboot-keycloak</module>
