@@ -1,7 +1,6 @@
 package io.hawt.web.auth;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +17,11 @@ public class Redirector {
 
         String scheme = request.getServletContext().getInitParameter("scheme");
         if (scheme != null) {
-            redirectUrl = scheme + "://" + request.getServerName() + ":" + request.getServerPort();
+            if (request.getServerPort() == 80 || request.getServerPort() == 443) {
+                redirectUrl = scheme + "://" + request.getServerName();
+            } else {
+                redirectUrl = scheme + "://" + request.getServerName() + ":" + request.getServerPort();
+            }
         }
 
         redirectUrl += request.getContextPath() + applicationContextPath + path;
